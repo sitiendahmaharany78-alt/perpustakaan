@@ -3,11 +3,19 @@
 $host="localhost";
 $user="root";
 $password="";
-$database="perpustakaan_db"; // Ubah dari "perpustakaan" menjadi "db_perpustakaan"
+$database="perpustakaan_db"; 
 
 $koneksi=new mysqli($host,$user,$password,$database);
 
 if($koneksi->connect_error){
      echo "Koneksi gagal";
+}
+
+// Tambahan fungsi redirect agar tidak error saat proses
+if (!function_exists('redirect')) {
+    function redirect($url, $type = '', $message = '') {
+        header("Location: $url");
+        exit();
+    }
 }
 ?>
