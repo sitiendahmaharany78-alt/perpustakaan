@@ -1,58 +1,83 @@
 <?php
 require 'koneksi.php';
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-$stmt = $koneksi->prepare("SELECT * FROM anggota WHERE id_anggota = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
 
-if ($result->num_rows === 0) {
-    header("Location: anggota.php");
-    exit;
-}
-$data = $result->fetch_assoc();
+// Ambil data anggota dari database
+$query = "SELECT * FROM anggota";
+$result = $koneksi->query($query);
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Anggota | Perpustakaan</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-warning text-dark">
-                        <h4 class="mb-0">Edit Data Anggota</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="proses_anggota.php" method="POST">
-                            <input type="hidden" name="id_anggota" value="<?= $data['id_anggota']; ?>">
-                            <div class="mb-3">
-                                <label class="form-label">NIM</label>
-                                <input type="text" class="form-control" name="nim" value="<?= htmlspecialchars($data['nim']); ?>" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Nama Lengkap</label>
-                                <input type="text" class="form-control" name="nama" value="<?= htmlspecialchars($data['nama']); ?>" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($data['email'] ?? ''); ?>">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">No HP</label>
-                                <input type="text" class="form-control" name="no_hp" value="<?= htmlspecialchars($data['no_hp'] ?? ''); ?>">
-                            </div>
-                            <button type="submit" name="update" class="btn btn-warning">Simpan Perubahan</button>
-                            <a href="anggota.php" class="btn btn-secondary">Batal</a>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Anggota</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  </head>
+  <body>
+    <!-- Navbar Atas -->
+    <nav class="navbar navbar-expand-md bg-primary navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Perpustakaan</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="buku.php">Buku</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="anggota.php">Anggota</a>
+            </li>
+          </ul>
         </div>
-    </div>
-</body>
+      </div>
+    </nav>
+
+    <!-- Konten Utama -->
+    <div class="container mt-4 mb-5">
+        <h2>Data Anggota</h2>
+        <hr>
+        
+        <!-- Tombol Input Anggota -->
+        <a href="tambah_anggota.php" class="btn btn-primary mb-3">Input Anggota</a>
+
+        <!-- Tabel Data Anggota -->
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th width="5%">No</th>
+                    <th>NIM</th>
+                    <th>Nama Lengkap</th>
+                    <th>Email</th>
+                    <th>No HP</th>
+                    <th width="15%">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($result->num_rows > 0): ?>
+                    <?php $no = 1; while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $no++; ?></td>
+                            <td><?= $row['nim']; ?></td>
+                            <td><?= $row['nama']; ?></td>
+                            <td><?= $row['email'] ?? '-'; ?></td>
+                            <td><?= $row['no_hp'] ?? '-'; ?></td>
+                            <td>
+                                <a href="edit_anggota.php?id=<?= $row['id_anggota']; ?>" class="btn btn-warning btn-sm text-dark fw-bold">Edit</a>
+                                <a href="hapus_anggota.php?id=<?= $row['id_anggota']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Belum ada data anggota.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+     </div>
+
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  </body>
 </html>
