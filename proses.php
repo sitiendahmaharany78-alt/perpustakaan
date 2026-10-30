@@ -1,4 +1,3 @@
-
 <?php
 
 require 'koneksi.php';
@@ -14,40 +13,19 @@ if (isset($_POST['submit'])) {
     $stok = (int) $_POST['stok'];
 
     $nama_sampul = '';
+    $folder = __DIR__ . '/Sampul/';
 
     // Jika pengguna memilih gambar
-    if (isset($_FILES['sampul']) &&
-        $_FILES['sampul']['error'] === UPLOAD_ERR_OK) {
-
-        $folder = __DIR__ . '/Sampul/';
-
-        if (!is_dir($folder)) {
-            mkdir($folder, 0755, true);
-        }
-
-        $ekstensi = strtolower(
-            pathinfo($_FILES['sampul']['name'], PATHINFO_EXTENSION)
-        );
-
-        $ekstensi_diizinkan = ['jpg', 'jpeg', 'png', 'webp'];
-
-        if (!in_array($ekstensi, $ekstensi_diizinkan, true)) {
-            die("Format gambar harus JPG, JPEG, PNG, atau WEBP.");
-        }
-
+    if (isset($_FILES['sampul']) && $_FILES['sampul']['error'] === UPLOAD_ERR_OK) {
+        
+        $ekstensi = strtolower(pathinfo($_FILES['sampul']['name'], PATHINFO_EXTENSION));
         $nama_sampul = uniqid('sampul_', true) . '.' . $ekstensi;
 
-        if (!move_uploaded_file(
-            $_FILES['sampul']['tmp_name'],
-            $folder . $nama_sampul
-        )) {
+        if (!move_uploaded_file($_FILES['sampul']['tmp_name'], $folder . $nama_sampul)) {
             die("Gagal mengunggah gambar.");
         }
 
-    } elseif (
-        isset($_FILES['sampul']) &&
-        $_FILES['sampul']['error'] !== UPLOAD_ERR_NO_FILE
-    ) {
+    } elseif (isset($_FILES['sampul']) && $_FILES['sampul']['error'] !== UPLOAD_ERR_NO_FILE) {
         die("Terjadi kesalahan saat mengunggah gambar.");
     }
 
@@ -103,43 +81,22 @@ if (isset($_POST['update'])) {
     }
 
     $nama_sampul = basename($dataLama['sampul'] ?? '');
+    $folder = __DIR__ . '/Sampul/';
 
     // Jika pengguna memilih gambar baru
-    if (isset($_FILES['sampul']) &&
-        $_FILES['sampul']['error'] === UPLOAD_ERR_OK) {
-
-        $folder = __DIR__ . '/Sampul/';
-
-        if (!is_dir($folder)) {
-            mkdir($folder, 0755, true);
-        }
-
-        $ekstensi = strtolower(
-            pathinfo($_FILES['sampul']['name'], PATHINFO_EXTENSION)
-        );
-
-        $ekstensi_diizinkan = ['jpg', 'jpeg', 'png', 'webp'];
-
-        if (!in_array($ekstensi, $ekstensi_diizinkan, true)) {
-            die("Format gambar harus JPG, JPEG, PNG, atau WEBP.");
-        }
-
+    if (isset($_FILES['sampul']) && $_FILES['sampul']['error'] === UPLOAD_ERR_OK) {
+        
+        $ekstensi = strtolower(pathinfo($_FILES['sampul']['name'], PATHINFO_EXTENSION));
         $nama_baru = uniqid('sampul_', true) . '.' . $ekstensi;
 
-        if (!move_uploaded_file(
-            $_FILES['sampul']['tmp_name'],
-            $folder . $nama_baru
-        )) {
+        if (!move_uploaded_file($_FILES['sampul']['tmp_name'], $folder . $nama_baru)) {
             die("Gagal mengunggah gambar baru.");
         }
 
         // Simpan nama sampul baru
         $nama_sampul = $nama_baru;
 
-    } elseif (
-        isset($_FILES['sampul']) &&
-        $_FILES['sampul']['error'] !== UPLOAD_ERR_NO_FILE
-    ) {
+    } elseif (isset($_FILES['sampul']) && $_FILES['sampul']['error'] !== UPLOAD_ERR_NO_FILE) {
         die("Terjadi kesalahan saat mengunggah gambar.");
     }
 
