@@ -1,83 +1,83 @@
 <?php
 require 'koneksi.php';
 
-// Ambil data anggota dari database
-$query = "SELECT * FROM anggota";
+// Ambil ID dari URL
+$id = $_GET['id'] ?? '';
+
+if (!$id) {
+    header("Location: anggota.php");
+    exit;
+}
+
+// Ambil data anggota berdasarkan ID
+$query = "SELECT * FROM anggota WHERE id_anggota = $id";
 $result = $koneksi->query($query);
+$row = $result->fetch_assoc();
+
+if (!$row) {
+    echo "Data tidak ditemukan!";
+    exit;
+}
+
+// Jika tombol update ditekan
+if (isset($_POST['submit'])) {
+    $nim = htmlspecialchars($_POST['nim']);
+    $nama = htmlspecialchars($_POST['nama']);
+    $email = htmlspecialchars($_POST['email']);
+
+    $update_query = "UPDATE anggota SET nim = '$nim', nama = '$nama', email = '$email' WHERE id_anggota = $id";
+    
+    if ($koneksi->query($update_query) === TRUE) {
+        header("Location: anggota.php?pesan=sukses_edit");
+        exit;
+    } else {
+        $error = "Gagal mengubah data: " . $koneksi->error;
+    }
+}
 ?>
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data Anggota</title>
+    <title>Edit Anggota</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   </head>
   <body>
-    <!-- Navbar dengan tema hijau dan tombol garis tiga di kanan -->
-    <nav class="navbar navbar-expand-lg bg-success navbar-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Perpustakaan</a>
-        <!-- Tombol garis tiga (toggler) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- Daftar menu yang akan tampil saat tombol garis tiga diklik -->
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="buku.php">Buku</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="anggota.php">Anggota</a>
-            </li>
-          </ul>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h4 class="mb-0">Edit Data Anggota</h4>
+                    </div>
+                    <div class="card-body">
+                        <?php if (isset($error)): ?>
+                            <div class="alert alert-danger"><?= $error; ?></div>
+                        <?php endif; ?>
+
+                        <form action="" method="POST">
+                            <div class="mb-3">
+                                <label for="nim" class="form-label">NIM</label>
+                                <input type="text" class="form-control" id="nim" name="nim" value="<?= $row['nim']; ?>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nama" class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" id="nama" name="nama" value="<?= $row['nama']; ?>" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= $row['email']; ?>">
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-success">Simpan Perubahan</button>
+                            <a href="anggota.php" class="btn btn-secondary">Kembali</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </nav>
-
-    <!-- Konten Utama -->
-    <div class="container mt-4 mb-5">
-        <h2>Data Anggota</h2>
-        <hr>
-        
-        <!-- Tombol Input Anggota -->
-        <a href="tambah_anggota.php" class="btn btn-success mb-3">+ Input Anggota</a>
-
-        <!-- Tabel Data Anggota -->
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th width="5%">No</th>
-                    <th>NIM</th>
-                    <th>Nama Lengkap</th>
-                    <th>Email</th>
-                    <th width="15%">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($result->num_rows > 0): ?>
-                    <?php $no = 1; while ($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= $no++; ?></td>
-                            <td><?= $row['nim']; ?></td>
-                            <td><?= $row['nama']; ?></td>
-                            <td><?= $row['email'] ?? '-'; ?></td>
-                            <td>
-                                <a href="edit_anggota.php?id=<?= $row['id_anggota']; ?>" class="btn btn-warning btn-sm text-dark fw-bold">Edit</a>
-                                <a href="hapus_anggota.php?id=<?= $row['id_anggota']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">Belum ada data anggota.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-     </div>
-
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   </body>
 </html>
