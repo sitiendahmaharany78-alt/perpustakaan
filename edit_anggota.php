@@ -14,15 +14,17 @@ $result = $koneksi->query($query);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   </head>
   <body>
-    <!-- Navbar Atas -->
-    <nav class="navbar navbar-expand-md bg-primary navbar-dark">
+    <!-- Navbar dengan tema hijau dan tombol garis tiga di kanan -->
+    <nav class="navbar navbar-expand-lg bg-success navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Perpustakaan</a>
+        <!-- Tombol garis tiga (toggler) -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
+        <!-- Daftar menu yang akan tampil saat tombol garis tiga diklik -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" href="buku.php">Buku</a>
             </li>
@@ -40,7 +42,7 @@ $result = $koneksi->query($query);
         <hr>
         
         <!-- Tombol Input Anggota -->
-        <a href="tambah_anggota.php" class="btn btn-primary mb-3">Input Anggota</a>
+        <a href="tambah_anggota.php" class="btn btn-success mb-3">+ Input Anggota</a>
 
         <!-- Tabel Data Anggota -->
         <table class="table table-bordered table-striped align-middle">
@@ -50,7 +52,6 @@ $result = $koneksi->query($query);
                     <th>NIM</th>
                     <th>Nama Lengkap</th>
                     <th>Email</th>
-                    <th>No HP</th>
                     <th width="15%">Aksi</th>
                 </tr>
             </thead>
@@ -62,7 +63,6 @@ $result = $koneksi->query($query);
                             <td><?= $row['nim']; ?></td>
                             <td><?= $row['nama']; ?></td>
                             <td><?= $row['email'] ?? '-'; ?></td>
-                            <td><?= $row['no_hp'] ?? '-'; ?></td>
                             <td>
                                 <a href="edit_anggota.php?id=<?= $row['id_anggota']; ?>" class="btn btn-warning btn-sm text-dark fw-bold">Edit</a>
                                 <a href="hapus_anggota.php?id=<?= $row['id_anggota']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
@@ -71,7 +71,7 @@ $result = $koneksi->query($query);
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted">Belum ada data anggota.</td>
+                        <td colspan="5" class="text-center text-muted">Belum ada data anggota.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
