@@ -24,6 +24,7 @@
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link text-dark" href="home.php">Home</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="buku.php">Buku</a></li>
+                     <li class="nav-item"><a class="nav-link text-dark" href="buku.php">Kategori</a></li>
                     <li class="nav-item"><a class="nav-link text-dark active fw-semibold" href="anggota.php">Anggota</a></li>
                 </ul>
             </div>
