@@ -7,10 +7,16 @@ if (isset($_POST['submit'])) {
     $nama  = $_POST['nama'];
     $email = $_POST['email'];
     $no_hp = $_POST['no_hp'];
+    
+    // 1. Ambil tanggal hari ini (Format: Tahun-Bulan-Tanggal, misal: 2026-10-30)
+    $terdaftar = date('Y-m-d');
 
-    $sql  = "INSERT INTO anggota (nim, nama, email, no_hp) VALUES (?, ?, ?, ?)";
+    // 2. Tambahkan kolom 'terdaftar' ke dalam query SQL dan tanda tanyanya (?)
+    $sql  = "INSERT INTO anggota (nim, nama, email, no_hp, terdaftar) VALUES (?, ?, ?, ?, ?)";
     $stmt = $koneksi->prepare($sql);
-    $stmt->bind_param("ssss", $nim, $nama, $email, $no_hp);
+    
+    // 3. Tambahkan huruf "s" kelima karena ada 5 parameter string
+    $stmt->bind_param("sssss", $nim, $nama, $email, $no_hp, $terdaftar);
 
     if ($stmt->execute()) {
         redirect('anggota.php', 'success', 'Data berhasil disimpan.');

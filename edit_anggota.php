@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   </head>
   <body>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow">
@@ -70,6 +70,14 @@ if (isset($_POST['submit'])) {
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" value="<?= $row['email']; ?>">
                             </div>
+
+                            <!-- Bagian Informasi Terdaftar -->
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal Terdaftar</label>
+                                <input type="text" class="form-control bg-light" value="<?= isset($row['tanggal_terdaftar']) ? date('d-m-Y H:i:s', strtotime($row['tanggal_terdaftar'])) : '-'; ?>" readonly>
+                                <div class="form-text">Tanggal terdaftar dibuat otomatis oleh sistem dan tidak dapat diubah.</div>
+                            </div>
+
                             <button type="submit" name="submit" class="btn btn-success">Simpan Perubahan</button>
                             <a href="anggota.php" class="btn btn-secondary">Kembali</a>
                         </form>

@@ -6,9 +6,12 @@ if (isset($_POST['submit'])) {
     $nama = htmlspecialchars($_POST['nama']);
     $email = htmlspecialchars($_POST['email']);
 
+    // Kolom tanggal_terdaftar tidak perlu ditulis di sini 
+    // karena sudah di-set otomatis (CURRENT_TIMESTAMP) oleh database
     $query = "INSERT INTO anggota (nim, nama, email) VALUES ('$nim', '$nama', '$email')";
+    
     if ($koneksi->query($query) === TRUE) {
-        header("Location: anggota.php");
+        header("Location: anggota.php?pesan=sukses_tambah");
         exit;
     } else {
         $error = "Gagal menambah data: " . $koneksi->error;
@@ -24,7 +27,7 @@ if (isset($_POST['submit'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   </head>
   <body>
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow">
@@ -49,6 +52,12 @@ if (isset($_POST['submit'])) {
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email">
                             </div>
+
+                            <!-- Info kecil bahwa tanggal terdaftar otomatis -->
+                            <div class="mb-3 text-muted small">
+                                * Tanggal terdaftar akan diisi otomatis oleh sistem saat data disimpan.
+                            </div>
+
                             <button type="submit" name="submit" class="btn btn-success">Simpan</button>
                             <a href="anggota.php" class="btn btn-secondary">Kembali</a>
                         </form>
@@ -57,5 +66,6 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   </body>
 </html>
